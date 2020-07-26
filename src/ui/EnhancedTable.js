@@ -20,6 +20,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import SnackBar from '@material-ui/core/Snackbar';
+import Button from "@material-ui/core/Button";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -134,6 +136,33 @@ const useToolbarStyles = makeStyles((theme) => ({
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
+  const [undo , setUndo] = React.useState([]);
+  const [alert , setAlert] = React.useState({open : false , 
+    color : "#FF3232" , message:"Row deleted!"})
+
+  const onDelete = () => {
+    console.log(props.selected); //Contains the selected names in an array to delete
+    const newRows = [...props.rows];
+    const selectedRows = newRows.filter(row =>
+      props.selected.includes(row.name))
+    console.log(selectedRows);
+    selectedRows.map(row => row.search = false)
+    console.log(newRows);
+    props.setRows(newRows);
+    setUndo(selectedRows)
+    props.setSelected([])
+    setAlert({...alert, open: true})
+  }
+
+  const onUndo  = () => {
+    console.log(undo);
+    setAlert({...alert , open : false});
+    const newRows = [...props.rows];
+    const redo = [...undo];
+    redo.map(row => row.search = true) 
+    Array.prototype.push.apply(newRows , ...redo)
+    props.setRows(newRows)
+  }
 
   return (
     <Toolbar
@@ -149,7 +178,7 @@ const EnhancedTableToolbar = (props) => {
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton aria-label="delete">
+          <IconButton aria-label="delete" onClick={onDelete}>
             <DeleteIcon style={{fontSize : 30 }} color="primary"/>
           </IconButton>
         </Tooltip>
@@ -160,6 +189,28 @@ const EnhancedTableToolbar = (props) => {
           </IconButton>
         </Tooltip>
       )}
+      <SnackBar 
+        open={alert.open}
+        ContentProps={{
+          style : {
+            backgroundColor : alert.color
+          }
+        }}
+        anchorOrigin={{vertical:"top" , horizontal:"center"}}
+        message={alert.message}
+        onClose={(event , reason) => {
+          if(reason === "clickaway") {
+            setAlert({...alert , open : false});
+            const newRows = [...props.rows]
+            const names = [...undo.map(row => row.name)]
+            props.setRows(newRows.filter(row => !names.includes(row.name)));
+            }}
+          }
+         
+        action={<Button style={{color : "#fff"}} onClick={onUndo}>
+                  Undo
+                </Button>}
+      />
     </Toolbar>
   );
 };
@@ -248,7 +299,11 @@ export default function EnhancedTable(props) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper} elevation={0}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+         selected={selected}
+         rows={props.rows}
+         setRows={props.setRows}
+        setSelected={setSelected} numSelected={selected.length} />
         <TableContainer>
           <Table
             className={classes.table}
