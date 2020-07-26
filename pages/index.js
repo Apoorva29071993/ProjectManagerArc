@@ -60,10 +60,10 @@ export default function ProjectManager() {
     "Medium","WebApplication","0-10","$1800",true),
     createData("Steve Jobs", "13/07/22","Custom Software","Photo/Video,File Transfer,Users/Authentication",
     "Low","Web Application","10-100","$1250",true),
-    createData("Reve Jobs", "13/07/22","Custom Software","Photo/Video,File Transfer,Users/Authentication",
-    "Low","Web Application","10-100","$1250",true),
-    createData("Meve Jobs", "13/07/22","Custom Software","Photo/Video,File Transfer,Users/Authentication",
-    "Low","Web Application","10-100","$1250",true)
+    createData("Reve Jobs", "13/07/22","Mobile App","Photo/Video,File Transfer,Users/Authentication",
+    "Low","iOS , Android","10-100","$1250",true),
+    createData("Meve Jobs", "13/07/22","Mobile App","Photo/Video,File Transfer,Users/Authentication",
+    "Low","Android","10-100","$1250",true)
   ]);
 
   const platformOptions = ["Web" , "iOS" , "Android"];
@@ -171,7 +171,13 @@ export default function ProjectManager() {
 
 
               <Grid item style={{marginTop : "5em" , marginBottom : "35em"}}>
-                <EnhancedTable rows={rows} setRows={setRows} page={page} setPage={setPage} />
+                <EnhancedTable 
+                rows={rows} setRows={setRows} 
+                page={page} setPage={setPage} 
+                websiteChecked={websiteChecked}
+                iOSChecked={iOSChecked}
+                androidChecked={androidChecked}
+                customSoftwareChecked={customSoftwareChecked}/>
               </Grid>
 
               <Dialog fullWidth maxWidth="md" open={dialogOpen} onClose={() => setDialogOpen(false)}>
