@@ -27,6 +27,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import {format} from 'date-fns';
+import EnhancedTable from '../src/ui/EnhancedTable';
 
 const useStyles= makeStyles(theme => ({
   service : {
@@ -58,6 +59,10 @@ export default function ProjectManager() {
     createData("Bill Gates", "29/08/20","Custom Software","GPS,PushNotifications,Users/Authentication,FileTranfer",
     "Medium","WebApplication","0-10","$1800",true),
     createData("Steve Jobs", "13/07/22","Custom Software","Photo/Video,File Transfer,Users/Authentication",
+    "Low","Web Application","10-100","$1250",true),
+    createData("Reve Jobs", "13/07/22","Custom Software","Photo/Video,File Transfer,Users/Authentication",
+    "Low","Web Application","10-100","$1250",true),
+    createData("Meve Jobs", "13/07/22","Custom Software","Photo/Video,File Transfer,Users/Authentication",
     "Low","Web Application","10-100","$1250",true)
   ]);
 
@@ -81,6 +86,7 @@ export default function ProjectManager() {
   const [platforms,setPlatforms] = useState([]);
   const [features,setFeatures] = useState([]);
   const [search , setSearch] = useState("");
+  const [page, setPage] = React.useState(0);
 
   const addProject = () => {
     setRows([...rows , 
@@ -121,6 +127,7 @@ export default function ProjectManager() {
      newRows[index].search = true : newRows[index].search = false )
 
     setRows(newRows);
+    setPage(0);
   }
 
   return (
@@ -162,41 +169,9 @@ export default function ProjectManager() {
               </FormGroup>
             </Grid>  
 
-              <Grid item container justify="flex-end" style={{marginTop : "5em"}}>
-                <Grid item style={{marginRight : 75}}>
-                <FilterListIcon color="secondary" style={{fontSize : 50}}/>
-                </Grid>
-              </Grid>
 
-              <Grid item style={{marginBottom : "15em"}}>
-                <TableContainer component={Paper} elevation={0}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="center">Name</TableCell>
-                        <TableCell align="center">Date</TableCell>
-                        <TableCell align="center">Service</TableCell>
-                        <TableCell align="center">Features</TableCell>
-                        <TableCell align="center">Complexity</TableCell>
-                        <TableCell align="center">Platforms</TableCell>
-                        <TableCell align="center">Users</TableCell>
-                        <TableCell align="center">Total</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {rows.filter(row => row.search).map((row , index) => ( <TableRow key={index}>
-                      <TableCell align="center">{row.name}</TableCell>
-                      <TableCell align="center">{row.date}</TableCell>
-                      <TableCell align="center">{row.service}</TableCell>
-                      <TableCell align="center">{row.features}</TableCell>
-                      <TableCell align="center">{row.complexity}</TableCell>
-                      <TableCell align="center">{row.platforms}</TableCell>
-                      <TableCell align="center">{row.users}</TableCell>
-                      <TableCell align="center">{row.total}</TableCell>
-                      </TableRow>))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+              <Grid item style={{marginTop : "5em" , marginBottom : "35em"}}>
+                <EnhancedTable rows={rows} page={page} setPage={setPage} />
               </Grid>
 
               <Dialog fullWidth maxWidth="md" open={dialogOpen} onClose={() => setDialogOpen(false)}>
