@@ -511,7 +511,7 @@ export default function EnhancedTable(props) {
                       </TableCell>
                       <TableCell align="center">{row.date}</TableCell>
                       <TableCell align="center">{row.service}</TableCell>
-                      <TableCell align="center" style={{maxWidth : "5em"}}>{row.features}</TableCell>
+                      <TableCell align="center" style={{width : "5em"}}>{row.features}</TableCell>
                       <TableCell align="center">{row.complexity}</TableCell>
                       <TableCell align="center">{row.platforms}</TableCell>
                       <TableCell align="center">{row.users}</TableCell>
@@ -525,7 +525,7 @@ export default function EnhancedTable(props) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={props.rows.filter(row => row.search).length}
+          count={priceFilters(switchFilters()).filter(row => row.search).length}
           rowsPerPage={rowsPerPage}
           page={props.page}
           onChangePage={handleChangePage}
